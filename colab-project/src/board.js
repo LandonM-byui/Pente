@@ -43,10 +43,7 @@ function winCheck(r, c){
             count += countDirection(r, c, -check[key][0], -check[key][1]);
 
             if (count >= 5) {
-                console.log(turn)
-
                 turn.textContent = `Player ${state.turn} wins!`
-                console.log(turn)
                 state.game_won = true;
             }
         }
