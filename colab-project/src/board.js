@@ -12,17 +12,17 @@ function place(r, c){
                     state.board[r][c] = 1;
                     placePiece(r,c)
                     removalCheck(r, c)
+                    turn.textContent = `Player 2's turn`
                     winCheck(r, c)
                     state.turn = 2;
-                    turn.textContent = `Player 2's turn`
                     break;
                 case 2:
                     state.board[r][c] = 2;
                     placePiece(r,c)
                     removalCheck(r,c)
+                    turn.textContent = `Player 1's turn`
                     winCheck(r, c)
                     state.turn = 1;
-                    turn.textContent = `Player 1's turn`
                     break;
             }
         }
@@ -43,7 +43,10 @@ function winCheck(r, c){
             count += countDirection(r, c, -check[key][0], -check[key][1]);
 
             if (count >= 5) {
-                console.log(`Player ${state.turn} wins!`)
+                console.log(turn)
+
+                turn.textContent = `Player ${state.turn} wins!`
+                console.log(turn)
                 state.game_won = true;
             }
         }
