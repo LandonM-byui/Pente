@@ -1,19 +1,30 @@
 import {state} from './state.js'
+import { placePiece, removePiece } from './generator.js';
 const check = {"t-l": [-1, -1], "t-m": [-1,0], "t-r": [-1, 1], "m-l": [0, -1], "m-r": [0, 1], "b-l": [1, -1], "b-m": [1, 0], "b-r": [1, 1]}
+const turn = document.querySelector(".turn p")
+const captures = [document.querySelector("#player_1_pieces p"), document.querySelector("#player_2_pieces p")]
 
 function place(r, c){
-    if (state.board[r][c] == 0) {
-        switch (state.turn){
-            case 1:
-                state.board[r][c] = 1;
-                winCheck(r, c)
-                state.turn = 2;
-                break;
-            case 2:
-                state.board[r][c] = 2;
-                winCheck(r, c)
-                state.turn = 1;
-                break;
+    if (!state.game_won){   
+        if (state.board[r][c] == 0) {
+            switch (state.turn){
+                case 1:
+                    state.board[r][c] = 1;
+                    placePiece(r,c)
+                    removalCheck(r, c)
+                    turn.textContent = `Player 2's turn`
+                    winCheck(r, c)
+                    state.turn = 2;
+                    break;
+                case 2:
+                    state.board[r][c] = 2;
+                    placePiece(r,c)
+                    removalCheck(r,c)
+                    turn.textContent = `Player 1's turn`
+                    winCheck(r, c)
+                    state.turn = 1;
+                    break;
+            }
         }
     }
 }
@@ -32,7 +43,11 @@ function winCheck(r, c){
             count += countDirection(r, c, -check[key][0], -check[key][1]);
 
             if (count >= 5) {
-                console.log(`Player ${state.turn} wins!`)
+                console.log(turn)
+
+                turn.textContent = `Player ${state.turn} wins!`
+                console.log(turn)
+                state.game_won = true;
             }
         }
 
@@ -88,10 +103,28 @@ function removalCheck(r,c,current=null, list = []){
     return null;
 }
 
+document.querySelector("#reset").addEventListener("click", reset)
+function reset(){
+    state.board = state.board.map(row => row.map(() => 0))
+    state.shown_board.forEach(row => {
+        row.forEach(column => column.querySelector("circle")?.remove())
+    });
+    state.turn = 1
+    turn.textContent = `Player 1's turn`
+    state.player1_captures = 0;
+    state.player2_captures = 0;
+    state.game_won = false;
+    captures[0].textContent = "Player 1 captures: 0"
+    captures[1].textContent = "Player 2 captures: 0"
+}
+
 function remove(coords){
     state.board[coords[0][0]][coords[0][1]] = 0;
+    removePiece(coords[0][0],coords[0][1])
     state.board[coords[1][0]][coords[1][1]] = 0;
+    removePiece(coords[1][0],coords[1][1])
     state[`player${state.turn}_captures`] += 1;
+    captures[state.turn - 1].textContent = `Player ${state.turn} captures: ` + String(state[`player${state.turn}_captures`])
 }
 
 export { place, winCheck, countDirection, removalCheck, remove };

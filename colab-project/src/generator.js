@@ -1,3 +1,6 @@
+import {state} from './state.js'
+import { place } from './board.js'
+
 const board = document.querySelector(".board")
 
 const BOARD_SIZE = 19
@@ -59,7 +62,27 @@ function tileGenerator(x, y, id) {
     const tile = document.createElementNS(SVG_NAMESPACE, "g")
     tile.setAttribute("transform", `translate(${x * CELL_SIZE},${y * CELL_SIZE})`)
     tile.append(rectGenerator(id))
+    if (((x != 0) && (y != 0) && ((x <= 17) && (y <= 17)))){
+        tile.addEventListener("click",() => {place(y - 1, x - 1)})
+        state.shown_board[y-1][x-1] = tile
+    }
     return tile
+}
+
+export function placePiece(r, c) {
+    const piece = document.createElementNS(SVG_NAMESPACE, "circle");
+
+    piece.classList.add("piece", `player-${state.turn}`)
+    piece.setAttribute("cx", "5");
+    piece.setAttribute("cy", "5");
+    piece.setAttribute("r", "3.5");
+    piece.setAttribute("pointer-events", "none");
+
+    state.shown_board[r][c].append(piece);
+}
+
+export function removePiece(r,c) {
+    state.shown_board[r][c].querySelector("circle")?.remove();
 }
 
 function rectGenerator(id) {

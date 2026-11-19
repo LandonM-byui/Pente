@@ -5,11 +5,23 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="src/style.css">
-    <script src="src/generator.js" defer></script>
+    <script src="src/generator.js" type="module" defer></script>
     <title>colab-project</title>
   </head>
   <body>
     <div class="board">
     </div>
+    <div class="turn">
+      <p>Player 1's turn</p>
+    </div>
+    <div class="captured_pieces">
+      <div id="player_1_pieces">
+        <p>Player 1 captures: 0</p>
+      </div>
+      <div id="player_2_pieces">
+        <p>Player 2 captures: 0</p>
+      </div>
+    </div>
+    <button id="reset">Reset</button>
   </body>
 </html>
